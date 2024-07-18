@@ -33,6 +33,20 @@ newgrp docker
 docker run hello-world
 ```
 
+Also, before starting, it is highly recommended to verify the speed of the storage device. The Hifive Unmatched supports an NVME PCIe 3 device and the following IO performance has been seen on a very low tier NVME:
+
+```bash
+sudo apt install --yes fio
+fio --randrepeat=1 --ioengine=libaio --direct=1 --gtod_reduce=1 \
+   --name=test --filename=test --bs=4k --iodepth=64 \
+    --size=1G --readwrite=randrw --rwmixread=75
+
+# read: IOPS=20.5k, BW=80.2MiB/s (84.1MB/s)(768MiB/9568msec)19
+# write: IOPS=6860, BW=26.8MiB/s (28.1MB/s)(256MiB/9568msec); 0 zone resets
+```
+
+After the iniatial clone and install while following the docs https://eth-docker.net/Usage/QuickStart#eth-docker-quickstart, we need to define the Docker source values in the .env file before running `ethd config`, for Geth and Nimbus.
+
 ### Geth on RISCV64
 
 ### Nimbus on RISCV64
