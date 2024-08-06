@@ -54,6 +54,37 @@ fio --randrepeat=1 --ioengine=libaio --direct=1 --gtod_reduce=1 \
 
 After the initial clone and install while following the docs https://eth-docker.net/Usage/QuickStart#eth-docker-quickstart, we need to define the Docker source values in the .env file before running `ethd config`, for Geth and Nimbus.
 
-### Geth on RISCV64
+### Banana PI
+
+```
+sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 871920D1991BC93C
+# add Ubuntu 24.04 RISCV64 ports to be able to install docker-compose-v2
+
+```
+
+### Geth and Nimbus on RISCV64
+
+```
+git clone https://github.com/lazyprogrammerio/eth-docker
+cd eth-docker
+# run ethd install to make sure everything is alright
+./ethd install
+# run ethd config to create the config .env file
+./ethd config
+# select holesky
+
+# modify the .env file by adding the following at the end
+# https://github.com/lazyprogrammerio/eth-docker/commit/05f34f5b1b712f066bf12fe2aa81bccfc1b7be47
+# there is GETH_DOCKER_REPO=lazyprogrammeriow/eth-docker should be GETH_DOCKER_REPO=lazyprogrammerio/eth-docker
+# NIM_DOCKERFILE=Dockerfile.source.riscv64.min
+# GETH_DOCKER_TAG=geth-alpine
+# GETH_DOCKER_REPO=lazyprogrammerio/eth-docker
+# GETH_DOCKERFILE=Dockerfile.binary
+# run ethd config again to build the images
+./ethd config
+
+# start ethd
+./ethd start
+```
 
 ### Nimbus on RISCV64
