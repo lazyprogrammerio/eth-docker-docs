@@ -87,4 +87,31 @@ cd eth-docker
 ./ethd start
 ```
 
-### Nimbus on RISCV64
+### Lighthouse on RISCV64
+
+```
+# install docker.io
+
+docker run -it alpine:edge /bin/sh
+
+# inside the docker container
+
+export OPENSSL_NO_VENDOR=Y
+apk update
+apk add vim
+apk add --no-cache make gcc musl-dev linux-headers git bash git-lfs ca-certificates bash tzdata git curl
+apk add rust clang
+apk add cargo
+apk add openssl
+apk add pkgconf openssl-dev
+apk add openssl-libs-static
+apk add alpine-sdk openssl-dev
+apk add cmake
+
+git clone https://github.com/haurog/lighthouse
+git clone https://github.com/haurog/rust-libp2p
+git clone https://github.com/haurog/utils
+cd lighthouse
+
+PROFILE=maxperf make
+```
