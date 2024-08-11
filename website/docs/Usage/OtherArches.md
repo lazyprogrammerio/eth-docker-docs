@@ -113,5 +113,20 @@ git clone https://github.com/haurog/rust-libp2p
 git clone https://github.com/haurog/utils
 cd lighthouse
 
-PROFILE=maxperf make
+export RUSTFLAGS="$RUSTFLAGS -L /usr/lib/"
+# to continue on SIGSEV errors
+# Maybe fixable by:
+# https://forum.banana-pi.org/t/banana-pi-f3-with-16-gb-ram-constantly-freezing-solved/18678/30?u=lazyprogrammerio
+# Add codegen-units=1 to the Cargo.toml release profile
+# [profile.release]
+# codegen-units=1
+until OPENSSL_LIB_DIR=/usr/lib/ OPENSSL_DIR=/usr/ PROFILE=release make; do sleep 1; done;
+
+# docker run -it lighhouse:binary --version
+# Lighthouse v5.2.1-4019e70+
+# BLS library: blst
+# SHA256 hardware acceleration: false
+# Allocator: jemalloc
+# Profile: release
+# Specs: mainnet (true), minimal (false), gnosis (false)
 ```
