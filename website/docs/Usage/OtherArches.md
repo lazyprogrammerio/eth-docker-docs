@@ -129,4 +129,10 @@ until OPENSSL_LIB_DIR=/usr/lib/ OPENSSL_DIR=/usr/ PROFILE=release make; do sleep
 # Allocator: jemalloc
 # Profile: release
 # Specs: mainnet (true), minimal (false), gnosis (false)
+
+# Added the lighhouse binary to https://github.com/lazyprogrammerio/eth-docker/releases/tag/v2.11.0.0
+# Needs to be copied over to eth-docker/lighthouse directory
+# Then do an ./ethd config, choose geth and lighthouse
+# Change .env file according to https://github.com/lazyprogrammerio/eth-docker/commit/11be4a6796373951c1c4c9dfaeaff4231c7fc2c1
+# Then do another ./ethd config and ./ethd start
 ```
