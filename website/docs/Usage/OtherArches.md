@@ -137,7 +137,9 @@ until OPENSSL_LIB_DIR=/usr/lib/ OPENSSL_DIR=/usr/ PROFILE=release make; do sleep
 # Then do another ./ethd config and ./ethd start
 ```
 
-For Irradium:
+### For Irradium
+
+See: https://forum.banana-pi.org/t/irradium-based-on-crux-linux-spacemit-banana-pi-bpi-f3-k1-riscv64/17989/14
 
 ```
 ip route add default via 192.168.1.1 dev eth1
