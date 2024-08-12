@@ -136,3 +136,21 @@ until OPENSSL_LIB_DIR=/usr/lib/ OPENSSL_DIR=/usr/ PROFILE=release make; do sleep
 # Change .env file according to https://github.com/lazyprogrammerio/eth-docker/commit/11be4a6796373951c1c4c9dfaeaff4231c7fc2c1
 # Then do another ./ethd config and ./ethd start
 ```
+
+For Irradium:
+
+```
+ip route add default via 192.168.1.1 dev eth1
+vim /etc/resolv.conf
+cd /etc/ports
+mv contrib.rsync.inactive contrib.rsync
+cd
+ports -u
+prt-get install wget curl vim
+prt-get install screen
+# see https://crux.nu/Main/Handbook3-7#ntoc34
+# docker
+# https://crux.nu/ports/contrib/3.7/docker/Pkgfile
+cd /usr/ports/contrib/docker
+pkgmk -d -i
+```
