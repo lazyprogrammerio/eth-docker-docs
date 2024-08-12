@@ -153,6 +153,31 @@ prt-get install screen
 # see https://crux.nu/Main/Handbook3-7#ntoc34
 # docker
 # https://crux.nu/ports/contrib/3.7/docker/Pkgfile
+
+# install go
+wget https://go.dev/dl/go1.22.6.linux-riscv64.tar.gz
+tar -xzvf go1.22.6.linux-riscv64.tar.gz
+mv go /usr/lib/
+ln -s /usr/lib/go/bin/go /usr/bin/go
+ln -s /usr/lib/go/bin/gofmt /usr/bin/gofmt
+
 cd /usr/ports/contrib/docker
 pkgmk -d -i
+
+cd /usr/ports/contrib/docker
+pkgmk -d -i
+
+cd /usr/ports/contrib/runc
+prt-get install libseccomp
+pkgmk -d -i
+
+cd /usr/ports/contrib/containerd
+pkgmk -d -i
+
+cd /usr/ports/contrib/cgroupfs-mount
+pkgmk -d -i
+cgroupfs-mount
+
+# start dockerd
+dockerd
 ```
