@@ -181,3 +181,48 @@ cgroupfs-mount
 # start dockerd
 dockerd
 ```
+
+### BFi3 overclocking to 1.8 Ghz - DO IT AT YOUR OWN RISK
+
+```
+# On An Ubuntu 24.04 AMD64
+sudo apt update
+sudo apt-get install gcc-riscv64-linux-gnu
+
+git clone https://github.com/BPI-SINOVOIP/pi-linux --single-branch -b linux-6.1.15-k1-dev --depth 1
+cd pi-linux
+# apply patch
+alias rvmake='make ARCH=riscv CROSS_COMPILE=riscv64-linux-gnu- -j60 '
+rvmake k1_defconfig
+rvmake dtbs
+# mount the /boot partition from Bianbu, usually sda5 to /tmp/bianbu
+# backup the old dtb
+mkdir /tmp/bianbu/spacemit/6.1.15/old-dtb
+mv /tmp/bianbu/spacemit/6.1.15/*.dtb /tmp/bianbu/spacemit/6.1.15/old-dtb/
+# copy the new dtb
+sudo cp arch/riscv/boot/dts/spacemit/*.dtb /tmp/bianbu/spacemit/6.1.15/
+```
+
+```patch
+diff --git a/arch/riscv/boot/dts/spacemit/k1-x_opp_table.dtsi b/arch/riscv/boot/dts/spacemit/k1-x_opp_table.dtsi
+index 6672b4816..22d9e3cd9 100644
+--- a/arch/riscv/boot/dts/spacemit/k1-x_opp_table.dtsi
++++ b/arch/riscv/boot/dts/spacemit/k1-x_opp_table.dtsi
+@@ -11,6 +11,14 @@ clst_core_opp_table0: opp_table0 {
+                clock-names = "ace0","ace1","tcm","cci","pll3";
+                cci-hz = /bits/ 64 <614000000>;
+
++               opp1800000000 {
++                       opp-hz = /bits/ 64 <1800000000>, /bits/ 64 <1800000000>;
++                       tcm-hz = /bits/ 64 <900000000>;
++                       ace-hz = /bits/ 64 <900000000>;
++                       opp-microvolt = <1160000>;
++                       clock-latency-ns = <200000>;
++               };
++
+                opp1600000000 {
+                        opp-hz = /bits/ 64 <1600000000>, /bits/ 64 <1600000000>;
+                        tcm-hz = /bits/ 64 <800000000>;
+```
+
+
