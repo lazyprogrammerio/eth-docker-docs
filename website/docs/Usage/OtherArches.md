@@ -281,6 +281,7 @@ sudo losetup -fv ubuntu-24.04-preinstalled-server-riscv64+unmatched.img
 # sudo dd if=spl/u-boot-spl.bin of=/dev/loop0 seek=34 status=progress
 
 # https://github.com/u-boot/u-boot/blob/master/doc/board/sifive/unmatched.rst#flashing
+# https://github.com/carlosedp/riscv-bringup/tree/master/unmatched
 sudo dd if=u-boot.itb of=/dev/loop0 seek=2082 status=progress
 
 sync
