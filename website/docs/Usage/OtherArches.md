@@ -225,4 +225,65 @@ index 6672b4816..22d9e3cd9 100644
                         tcm-hz = /bits/ 64 <800000000>;
 ```
 
+### Sifive Hifive Unmatched overclock to 1.4Ghz on Ubuntu 24.04 - DO IT AT YOUR OWN RISK
+
+By default, Ubuntu 24.04 official image comes with the CPU clocked at 1Ghz. Shame!
+
+U-boot needs to be patched for overclocking.
+
+```bash
+git clone https://github.com/riscv/opensbi.git
+pushd opensbi/
+make PLATFORM=generic
+ls platform/generic/firmware/fw_payload.bin
+# change this accordingly
+export OPENSBI="FULL_PATH to opensbi/build/platform/generic/firmware/fw_dynamic.bin"
+popd
+
+sudo apt install swig uuid-dev bc bison build-essential flex libgnutls28-dev lz4 lzma lzma-alone
+
+git clone https://github.com/u-boot/u-boot
+pushd u-boot/
+make sifive_unmatched_defconfig
+# apply the patch from bellow
+make -j8
+ls -liath u-boot.itb
+ls -liath spl/u-boot-spl.bin
+```
+
+```patch
+diff --git a/arch/riscv/dts/fu740-c000-u-boot.dtsi b/arch/riscv/dts/fu740-c000-u-boot.dtsi
+index 956237c321..2bfb05a9b1 100644
+--- a/arch/riscv/dts/fu740-c000-u-boot.dtsi
++++ b/arch/riscv/dts/fu740-c000-u-boot.dtsi
+@@ -8,7 +8,7 @@
+ / {
+        cpus {
+                assigned-clocks = <&prci FU740_PRCI_CLK_COREPLL>;
+-               assigned-clock-rates = <1200000000>;
++               assigned-clock-rates = <1400000000>;
+                bootph-pre-ram;
+                cpu0: cpu@0 {
+                        clocks = <&prci FU740_PRCI_CLK_COREPLL>;
+```
+
+Use the above created `spl/u-boot-spl.bin` and `u-boot.itb`.
+
+```bash
+wget https://cdimage.ubuntu.com/releases/noble/release/ubuntu-24.04-preinstalled-server-riscv64+unmatched.img.xz
+unxz ubuntu-24.04-preinstalled-server-riscv64+unmatched.img.xz
+sudo losetup -fv ubuntu-24.04-preinstalled-server-riscv64+unmatched.img
+# check what loop device it is, will consider /dev/loop0
+
+sudo dd if=/dev/zero of=/dev/loop0 seek=34 bs=1k count=2048 status=progress
+sudo dd if=/dev/zero of=/dev/loop0 seek=2082 bs=1k count=8158 status=progress
+
+sudo dd if=spl/u-boot-spl.bin of=/dev/loop0 seek=34 status=progress
+sudo dd if=u-boot.itb of=/dev/loop0 seek=2082 status=progress
+
+sync
+
+losetup -d /dev/loop0
+# Now, dd the image to an sd card and enjoy
+```
 
