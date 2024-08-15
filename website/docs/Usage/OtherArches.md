@@ -275,10 +275,12 @@ unxz ubuntu-24.04-preinstalled-server-riscv64+unmatched.img.xz
 sudo losetup -fv ubuntu-24.04-preinstalled-server-riscv64+unmatched.img
 # check what loop device it is, will consider /dev/loop0
 
-sudo dd if=/dev/zero of=/dev/loop0 seek=34 bs=1k count=2048 status=progress
-sudo dd if=/dev/zero of=/dev/loop0 seek=2082 bs=1k count=8158 status=progress
+# not needed
+# sudo dd if=/dev/zero of=/dev/loop0 seek=34 bs=1k count=2048 status=progress
+# sudo dd if=/dev/zero of=/dev/loop0 seek=2082 bs=1k count=8158 status=progress
+# sudo dd if=spl/u-boot-spl.bin of=/dev/loop0 seek=34 status=progress
 
-sudo dd if=spl/u-boot-spl.bin of=/dev/loop0 seek=34 status=progress
+# https://github.com/u-boot/u-boot/blob/master/doc/board/sifive/unmatched.rst#flashing
 sudo dd if=u-boot.itb of=/dev/loop0 seek=2082 status=progress
 
 sync
