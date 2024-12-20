@@ -290,3 +290,63 @@ losetup -d /dev/loop0
 # Now, dd the image to an sd card and enjoy
 ```
 
+### QEMU VMs for RISC-V
+
+Links:
+
+  * https://github.com/u-boot/u-boot/blob/master/doc/board/emulation/qemu-riscv.rst
+
+Ubuntu host:
+
+```bash
+sudo apt-get update
+sudo apt-get install opensbi qemu-system-misc u-boot-qemu
+```
+
+Ubuntu VM:
+
+  * https://cdimage.ubuntu.com/releases/24.04/release/ubuntu-24.04.1-preinstalled-server-riscv64.img.xz
+  * https://wiki.ubuntu.com/RISC-V/QEMU
+
+```bash
+wget https://cdimage.ubuntu.com/releases/24.04/release/ubuntu-24.04.1-preinstalled-server-riscv64.img.xz
+
+unxz ubuntu-24.04.1-preinstalled-server-riscv64.img.xz
+
+qemu-system-riscv64 \
+ -machine virt -nographic -m 2048 -smp 4 \
+ -bios /usr/lib/riscv64-linux-gnu/opensbi/generic/fw_jump.bin \
+ -kernel /usr/lib/u-boot/qemu-riscv64_smode/uboot.elf \
+ -device virtio-net-device,netdev=eth0 -netdev user,id=eth0 \
+ -device virtio-rng-pci \
+ -drive file=ubuntu-24.04-preinstalled-server-riscv64.img,format=raw,if=virtio \
+ -vnc :1 \
+ -serial stdio -device VGA \
+ -device qemu-xhci,id=xhci -device usb-kbd,bus=xhci.0
+
+# user/pass
+# ubuntu:ubuntu
+```
+
+Fedora VM:
+
+  * https://fedoraproject.org/wiki/Architectures/RISC-V/QEMU
+  * https://dl.fedoraproject.org/pub/alt/risc-v/testing/f41/cloud/Fedora.riscv64-41.qcow2
+
+```bash
+wget https://dl.fedoraproject.org/pub/alt/risc-v/testing/f41/cloud/Fedora.riscv64-41.qcow2
+
+qemu-system-riscv64 \
+ -machine virt -nographic -m 2048 -smp 4 \
+ -bios /usr/lib/riscv64-linux-gnu/opensbi/generic/fw_jump.bin \
+ -kernel /usr/lib/u-boot/qemu-riscv64_smode/uboot.elf \
+ -device virtio-net-device,netdev=eth0 -netdev user,id=eth0 \
+ -device virtio-rng-pci \
+ -drive file=Fedora.riscv64-41.qcow2,format=qcow2,if=virtio \
+ -vnc :2 \
+ -serial stdio -device VGA \
+ -device qemu-xhci,id=xhci -device usb-kbd,bus=xhci.0
+
+# user/pass
+# root:fedora
+```
