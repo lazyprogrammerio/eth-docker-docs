@@ -314,15 +314,16 @@ wget https://cdimage.ubuntu.com/releases/24.04/release/ubuntu-24.04.1-preinstall
 unxz ubuntu-24.04.1-preinstalled-server-riscv64.img.xz
 
 qemu-system-riscv64 \
- -machine virt -nographic -m 2048 -smp 4 \
- -bios /usr/lib/riscv64-linux-gnu/opensbi/generic/fw_jump.bin \
- -kernel /usr/lib/u-boot/qemu-riscv64_smode/uboot.elf \
- -device virtio-net-device,netdev=eth0 -netdev user,id=eth0 \
- -device virtio-rng-pci \
- -drive file=ubuntu-24.04-preinstalled-server-riscv64.img,format=raw,if=virtio \
- -vnc :1 \
- -serial stdio -device VGA \
- -device qemu-xhci,id=xhci -device usb-kbd,bus=xhci.0
+-machine virt -cpu rv64,h=true \
+-m 4096 -smp 8 \
+-bios /usr/lib/riscv64-linux-gnu/opensbi/generic/fw_jump.bin \
+-kernel /usr/lib/u-boot/qemu-riscv64_smode/uboot.elf \
+-device virtio-net-device,netdev=eth0 -netdev user,id=eth0 \
+-device virtio-rng-pci \
+-drive file=ubuntu-24.04.1-preinstalled-server-riscv64.img,format=raw,if=virtio \
+-vnc :1 \
+-serial stdio -device VGA \
+-device qemu-xhci,id=xhci -device usb-kbd,bus=xhci.0
 
 # user/pass
 # ubuntu:ubuntu
